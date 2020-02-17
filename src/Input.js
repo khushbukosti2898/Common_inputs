@@ -1,72 +1,152 @@
 import React from 'react';
 import './App.css'
-import { PropTypes } from 'prop-types';
+import { PropTypes, element } from 'prop-types';
 import { Form } from 'react-bootstrap';
 
-class Input extends React.Component {
-  constructor(props) {
-    super(props);
+export function Input(props) {
+
+  const { title, checked, option, label, isRequired, className, name, type, value, style, placeholder,
+    onChange, onBlur, required, error } = props;
+  return (<>
+    {title}{isRequired && <span style={{ color: "red" }}>*</span>}
+    <Form.Control
+      className={className}
+      name={name}
+      type={type}
+      value={value}
+      style={style}
+      placeholder={placeholder}
+      onChange={onChange}
+      onBlur={onBlur}
+      required={required}
+    />{error && <span className="error">{`*${error} `}</span>}
+  </>)
+}
+
+export class CheckBox extends React.Component {
+  constructor() {
+    super()
+    this.hobbies = [
+      { value: "swimming", label: "Swimming" },
+      { value: "reading", label: "Reading" },
+      { value: "dancing", label: "Dancing" },
+      { value: "cooking", label: "Cooking" },
+    ]
   }
   render() {
-    const { title, checked, option, label, isRequired, className, name, type, value, style, placeholder,
-      onChange, onBlur, required, error } = this.props
-    console.log(checked)
-    if (type === 'text') {
-      Element = <>
-        {title}
-        <Form.Control
-          className={className}
-          name={name}
-          type={type}
-          value={value}
-          style={style}
-          placeholder={placeholder}
-          onChange={onChange}
-          onBlur={onBlur}
-          required={required}
-        />
-      </>
+    let { hobbies, name, title, type, isRequired, value, onChange, error } = this.props
+    return <><div>
+      {title}{isRequired && <span style={{ color: "red" }}>*</span>}
+      {this.hobbies.map((x, i) => {
+        return (
+          <label key={i} className="mr-2">
+            <input
+              type={type}
+              name={hobbies}
+              value={x.value}
+              onChange={onChange}
+            /> {x.label}
+          </label>
+        );
+      })}
+    </div>
+      {error && <span className="error">{`*${error} `}</span>}
+    </>
+  }
+}
+
+export class OnlyOneCheckBox extends React.Component {
+  constructor() {
+    super()
+    this.occupation = [
+      { value: "employee", label: "Employee" },
+      { value: "student", label: "Student" },
+    ]
+    this.state = {
+      selected: 'student'
     }
-    else if (type === 'checkbox') {
-      Element = <>
-        <Form.Check type={type}
-          name={name}
-          value={value}
-          onChange={onChange}
-          label={label}
-          checked={checked}
-        /></>
-    }
-    else if (type === 'radio') {
-      Element = <>
-        <Form.Check type={type}
-          name={name}
-          value={value}
-          label={label}
-          onChange={onChange}
-        /></>
-    }
-    else if (type === 'dropdown') {
-      Element = <>
-        <Form.Label>City</Form.Label>
-        <Form.Control as="select" name={name} onChange={onChange}>
-          <option>Select</option>
-          <option>{option[0]}</option>
-          <option>{option[1]}</option>
-          <option>{option[2]}</option>
-        </Form.Control></>
-    }
+  }
+  render() {
+    let { occupation, error, name, title, type, isRequired, value, onChange, checked } = this.props
+    return <div>
+      {title}{isRequired && <span style={{ color: "red" }}>*</span>}
+      {this.occupation.map((x, i) => {
+        return (
+          <label key={i} className="mr-2">
+            <input
+              type={type}
+              name="occupation"
+              value={x.value}
+              onChange={onChange}
+              checked={checked == x.value}
+              error={error}
+            /> {x.label}
+          </label>
+        );
+      })}<br/>
+      {error && <span className="error">{`*${error} `}</span>}
+    </div>
+
+  }
+}
+
+export class RadioButton extends React.Component {
+  constructor() {
+    super()
+    this.gender = [
+      { value: "female", label: "Female", name: "gender" },
+      { value: "male", label: "Male", name: "gender" },
+    ]
+  }
+  render() {
+    let { title, error, type, isRequired, onChange, checked } = this.props
+    return <div>
+      {title}{isRequired && <span style={{ color: "red" }}>*</span>}
+      {this.gender.map((x, i) => {
+        return <label key={x.i}>
+          <input
+            type={type}
+            onChange={onChange}
+            value={x.value}
+            name={x.name}
+            error={error}
+          />
+          {x.label}
+        </label>
+
+      })}<br />
+      {error && <span className="error">{`*${error} `}</span>}
+    </div>
+  }
+}
+
+export class DropDown extends React.Component {
+  render() {
+    let { title, name, error, onChange, option, isRequired } = this.props
     return (<>
-      <Form.Group>
-        {isRequired && <span style={{ color: "red" }}>*</span>}
-        {Element}
-        {(type === "text" || type === 'dropdown') &&
-          error && <span className="error">{`*${error} `}</span>}
-      </Form.Group>
+      {title}{isRequired && <span style={{ color: "red" }}>*</span>}
+      <select name={name} onChange={onChange}>
+        <option>Select</option>
+        <option>{option[0]}</option>
+        <option>{option[1]}</option>
+        <option>{option[2]}</option>
+      </select>
+      <br />
+      {error && <span className="error">{`*${error} `}</span>}
     </>)
   }
 }
 
+CheckBox.defaultProps = {
+  type: "checkbox"
+}
+
+OnlyOneCheckBox.defaultProps = {
+  type: "checkbox"
+}
+RadioButton.defaultProps = {
+  type: "radio"
+}
 
 Input.defaultProps = {
   type: "text",
@@ -74,8 +154,6 @@ Input.defaultProps = {
     margin: "10px",
   },
   isRequired: false,
-  chacked: "false"
-
 }
 
 Input.propTypes = {
@@ -85,4 +163,4 @@ Input.propTypes = {
   style: PropTypes.object,
   placeholder: PropTypes.string
 }
-export default Input;
+/* export default Input; */

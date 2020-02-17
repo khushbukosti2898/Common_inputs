@@ -1,0 +1,43 @@
+/* return (<>
+        <Form.Group>
+          {isRequired && <span style={{ color: "red" }}>*</span>}
+          {Element}
+          {(type === "text" || type === 'dropdown') &&
+            error && <span className="error">{`*${error} `}</span>}
+        </Form.Group>
+      </>) */
+    /* 
+    else if (type === 'checkbox') {
+      Element = <>
+        <Form.Check type={type}
+          name={name}
+          value={value}
+          onChange={onChange}
+          label={label}
+          checked={checked}
+        /></>
+    }
+    else if (type === 'radio') {
+      Element = <>
+        <Form.Check type={type}
+          name={name}
+          value={value}
+          label={label}
+          onChange={onChange}
+        /></>
+    }
+    else if (type === 'dropdown') {
+      Element = <>
+        <Form.Label>City</Form.Label>
+        <Form.Control as="select" name={name} onChange={onChange}>
+          <option>Select</option>
+          <option>{option[0]}</option>
+          <option>{option[1]}</option>
+          <option>{option[2]}</option>
+        </Form.Control></>
+    }
+    
+  }
+}
+ */
+

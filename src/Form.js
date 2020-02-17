@@ -1,8 +1,8 @@
 import React from 'react';
-import Input from './Input';
 import Checkbox from './Checkbox';
 import './App.css'
 import { Button, Row, Col } from 'react-bootstrap';
+import { Input, CheckBox, OnlyOneCheckBox, RadioButton, DropDown } from './Input'
 
 class Form extends React.Component {
 	state = {
@@ -14,6 +14,8 @@ class Form extends React.Component {
 		gender: '',
 		city: '',
 		occupation: '',
+		hobbies: [],
+		mobile: '',
 		error: {
 			mobile: '',
 			fname: '',
@@ -30,9 +32,8 @@ class Form extends React.Component {
 		let { hobbies } = this.state;
 		let { value, checked } = e.target;
 		let index;
-		if (checked) {
+		if (checked)
 			hobbies.push(value);
-		}
 		else {
 			index = hobbies.indexOf(value)
 			hobbies.splice(index, 1)
@@ -40,7 +41,6 @@ class Form extends React.Component {
 		this.setState({ hobbies },
 			() => { this.validateCheckField(hobbies, value) });
 	}
-
 	validateCheckField = (name, value) => {
 		let { error } = this.state;
 		if (name.length == 0) error.hobbies = "Select atleast one hobby"
@@ -49,52 +49,37 @@ class Form extends React.Component {
 	}
 
 	handleSubmit = (name, value) => {
-		let { error, hobbies, gender, city, occupation } = this.state;
+		let { error, email, pwd, hobbies, gender, city, occupation, fname, lname, mobile } = this.state;
 		switch (name) {
 			case 'email':
-				if (value == '')
+				if (email == '')
 					error.email = "Email is required"
 				else
-					error.email = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i) ? '' :
+					error.email = email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i) ? '' :
 						"Email is invalid";
 				break;
 
 			case 'pwd':
-				if (value == '')
+				if (pwd == '')
 					error.pwd = "Password is required"
 				else
-					error.pwd = value.match(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/i) ? '' :
+					error.pwd = pwd.match(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/i) ? '' :
 						"Password is invalid";
 				break;
 
 			case 'fname':
-				if (value == '')
-					error.fname = "First name is required"
-				else
-					error.fname = value.match(/^([A-Z]*[a-z]*).{2,20}$/) ? '' :
-						"Fisrt name is invalid";
+				error.fname = fname === '' ? "First name is required" : ''
 				break;
 
 			case 'lname':
-				if (value == '')
-					error.lname = "Last name is required"
-				else
-					error.lname = value.match(/^([A-Z]*[a-z]*).{2,20}$/) ? '' :
-						"Last name is invalid";
+				error.lname = lname === '' ? "Last name is required" : ''
 				break;
 
 			case 'mobile':
-				if (value == '')
+				if (mobile == '')
 					error.mobile = "Mobile is required"
 				else
-					error.mobile = value.match(/^\d{10}$/) ? '' : 'Mobile is invalid';
-				break;
-
-			case 'gender':
-				if (gender == "")
-					error.gender = "Select gender"
-				else
-					error.gender = '';
+					error.mobile = mobile.match(/^\d{10}$/i) ? '' : 'Mobile is invalid';
 				break;
 
 			case 'hobbies':
@@ -104,18 +89,21 @@ class Form extends React.Component {
 					error.hobbies = '';
 				break;
 
+			case 'occupation':
+				error.occupation = occupation === '' ? "Occupation is required" : ''
+				break;
+
+			case 'gender':
+				if (gender == "")
+					error.gender = "Select gender"
+				else
+					error.gender = '';
+				break;
 			case 'city':
 				if (city === '' || city === "Select")
 					error.city = "Select city"
 				else
 					error.city = '';
-				break;
-
-			case 'occupation':
-				if (occupation === "")
-					error.occupation = "Select any one"
-				else
-					error.occupation = '';
 				break;
 		}
 		this.setState({ error: error })
@@ -192,6 +180,7 @@ class Form extends React.Component {
 						/>
 					</Col>
 				</Row>
+
 				<Row>
 					<Col md="6">
 						<Input
@@ -218,93 +207,49 @@ class Form extends React.Component {
 						/>
 					</Col>
 				</Row>
-				<Row><Col>Hobbies</Col></Row>
+
 				<Row>
 					<Col>
-						<Input
+						<CheckBox
 							onChange={this.handleChangeCheck}
-							type="checkbox"
-							name="hobbies"
-							value="swimming"
-							title="Hobbies"
-							label="Swimming"
-							error={hobbies}
 							isRequired={true}
-						/>
-						<Input
-							onChange={this.handleChangeCheck}
-							type="checkbox"
-							name="hobbies"
-							value="reading"
 							title="Hobbies"
-							label="Reading"
 							error={hobbies}
-						/>
-						<Input
-							onChange={this.handleChangeCheck}
-							type="checkbox"
-							name="hobbies"
-							value="cooking"
-							title="Hobbies"
-							label="Cooking"
-							error={hobbies}
-						/>
-						{hobbies && <span className="error">{`*${hobbies} `}</span>}
-					</Col>
-					<Col>Occupation
-					<Input
-							onChange={this.handleChange}
-							type="checkbox"
-							name="occupation"
-							value="student"
-							label="Student"
-							error={occupation}
-							checked={this.state.occupation === 'student'}
-							isRequired={true}
 						/>
 
-						<Input
-							onChange={this.handleChange}
-							type="checkbox"
-							name="occupation"
-							value="employee"
-							label="Employee"
-							error={occupation}
-							checked={this.state.occupation === 'employee'}
-						/>
-						{occupation && <span className="error">{`*${occupation} `}</span>}
 					</Col>
-				</Row>
-				<Row>
-					<Col>Gender</Col>
-				</Row>
-				<Row>
 					<Col>
-						<Input
+						<RadioButton
 							onChange={this.handleChange}
-							type="radio"
-							name="gender"
-							value="male"
-							label="Male"
 							error={gender}
 							isRequired={true}
+							title="Gender"
 						/>
-						<Input
-							onChange={this.handleChange}
-							type="radio"
-							name="gender"
-							value="female"
-							label="Female"
-							error={gender}
-						/>
-						{gender && <span className="error">{`*${gender} `}</span>}
+
 					</Col>
+
+				</Row>
+				<Row>
 					<Col>
-						<Input type="dropdown"
+						<OnlyOneCheckBox
+							onChange={this.handleChange}
+							error={occupation}
+							isRequired={true}
+							title="Occupation"
+							checked={this.state.occupation}
+						/>
+					</Col>
+				</Row>
+				<Row>
+					<Col>
+						<DropDown
 							name="city"
-							option={["ahmedabad", "Mumbai", "Dehli"]}
 							onChange={this.handleChange}
 							error={city}
+							isRequired={true}
+							title="City"
+							option={['Ahmedabad', 'Delhi', 'Mumbai']}
+							isRequired={true}
 						/>
 					</Col>
 				</Row>
@@ -313,7 +258,6 @@ class Form extends React.Component {
 						<Button variant="primary" onClick={this.handleClick}>Submit</Button>
 					</Col>
 				</Row>
-
 			</div>
 		</>
 		)
