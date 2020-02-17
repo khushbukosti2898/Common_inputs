@@ -1,16 +1,16 @@
 import React from 'react';
-import Checkbox from './Checkbox';
 import './App.css'
 import { Button, Row, Col } from 'react-bootstrap';
 import { Input, CheckBox, OnlyOneCheckBox, RadioButton, DropDown } from './Input'
+import 'react-toastify/dist/ReactToastify.css';
 
 class Form extends React.Component {
 	state = {
 		fname: '',
 		lname: '',
+		mname:'',
 		email: '',
 		pwd: '',
-		hobbies: [],
 		gender: '',
 		city: '',
 		occupation: '',
@@ -43,16 +43,16 @@ class Form extends React.Component {
 	}
 	validateCheckField = (name, value) => {
 		let { error } = this.state;
-		if (name.length == 0) error.hobbies = "Select atleast one hobby"
+		if (name.length === 0) error.hobbies = "Select atleast one hobby"
 		else error.hobbies = "";
 		this.setState({ error })
 	}
 
 	handleSubmit = (name, value) => {
-		let { error, email, pwd, hobbies, gender, city, occupation, fname, lname, mobile } = this.state;
+		let { error, email, pwd, hobbies, gender, city, occupation, fname, lname, mobile,mname } = this.state;
 		switch (name) {
 			case 'email':
-				if (email == '')
+				if (email === '')
 					error.email = "Email is required"
 				else
 					error.email = email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i) ? '' :
@@ -60,33 +60,35 @@ class Form extends React.Component {
 				break;
 
 			case 'pwd':
-				if (pwd == '')
-					error.pwd = "Password is required"
-				else
-					error.pwd = pwd.match(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/i) ? '' :
-						"Password is invalid";
+				if (pwd === '') error.pwd = "Password is required"
+				else error.pwd = pwd.match(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*()-_+={}[]|;:"<>,.])(?=.{6,})/i) ? '' :
+					"Password is invalid(must contain one uppercase, lowercase, digit, special character and length>6)";
 				break;
 
 			case 'fname':
-				error.fname = fname === '' ? "First name is required" : ''
+				if (fname === '') error.fname = "First name is required"
+				else error.fname = fname.match(/^[a-zA-Z]{2,30}$/i) ? '' :
+					"First name is invalid";
+				break;
+
+			case 'mname':
+				 error.mname = mname.match(/^[a-zA-Z]{2,30}$/i) ? '' :
+					"Middle name is invalid";
 				break;
 
 			case 'lname':
-				error.lname = lname === '' ? "Last name is required" : ''
+				if (lname === '') error.lname = "Last name is required"
+				else error.lname = lname.match(/^[a-zA-Z]{2,30}$/i) ? '' :
+					"Last name is invalid";
 				break;
 
 			case 'mobile':
-				if (mobile == '')
-					error.mobile = "Mobile is required"
-				else
-					error.mobile = mobile.match(/^\d{10}$/i) ? '' : 'Mobile is invalid';
+				if (mobile === '') error.mobile = "Mobile is required"
+				else error.mobile = mobile.match(/^\d{10}$/i) ? '' : 'Mobile is invalid';
 				break;
 
 			case 'hobbies':
-				if (hobbies.length == 0)
-					error.hobbies = "Select atleast one hobby"
-				else
-					error.hobbies = '';
+				error.hobbies = hobbies.length === 0 ? "Select atleast one hobby" : '';
 				break;
 
 			case 'occupation':
@@ -94,7 +96,7 @@ class Form extends React.Component {
 				break;
 
 			case 'gender':
-				if (gender == "")
+				if (gender === "")
 					error.gender = "Select gender"
 				else
 					error.gender = '';
@@ -104,6 +106,8 @@ class Form extends React.Component {
 					error.city = "Select city"
 				else
 					error.city = '';
+				break;
+			default:
 				break;
 		}
 		this.setState({ error: error })
@@ -126,10 +130,11 @@ class Form extends React.Component {
 	}
 
 	render() {
-		let { fname, lname, mobile, gender, hobbies, email, pwd, city, occupation } = this.state.error
+		let { fname, lname, mobile, gender, hobbies, email, pwd, city, occupation,mname } = this.state.error
+
 		return (<>
-			<div className="container card" style={{ margin: "30px" }}>
-				<Row><Col><h3>Sign up</h3></Col></Row>
+			<div className="container card" style={{ marginTop: "50px" }}>
+				<Row className="text-center"><Col md="12"><h3>Sign up</h3></Col></Row>
 				<Row>
 					<Col md='4'>
 						<Input
@@ -149,8 +154,8 @@ class Form extends React.Component {
 							name="mname"
 							placeholder="Middle Name"
 							onChange={this.handleChange}
-							onBlur={this.handleChange}
 							isRequired={false}
+							error={mname}
 						/>
 					</Col>
 					<Col md='4'>
@@ -185,7 +190,7 @@ class Form extends React.Component {
 					<Col md="6">
 						<Input
 							title="Password"
-							type="text"
+							type="password"
 							name="pwd"
 							placeholder="Password"
 							onChange={this.handleChange}
@@ -194,6 +199,7 @@ class Form extends React.Component {
 							isRequired={true}
 						/>
 					</Col>
+
 					<Col md="6">
 						<Input
 							title="Mobile"
@@ -209,28 +215,25 @@ class Form extends React.Component {
 				</Row>
 
 				<Row>
-					<Col>
+					<Col md="6">
 						<CheckBox
 							onChange={this.handleChangeCheck}
 							isRequired={true}
 							title="Hobbies"
 							error={hobbies}
 						/>
-
 					</Col>
-					<Col>
+					<Col md="6">
 						<RadioButton
 							onChange={this.handleChange}
 							error={gender}
 							isRequired={true}
 							title="Gender"
 						/>
-
 					</Col>
-
 				</Row>
 				<Row>
-					<Col>
+					<Col md="12">
 						<OnlyOneCheckBox
 							onChange={this.handleChange}
 							error={occupation}
@@ -241,20 +244,19 @@ class Form extends React.Component {
 					</Col>
 				</Row>
 				<Row>
-					<Col>
+					<Col md="12">
 						<DropDown
 							name="city"
 							onChange={this.handleChange}
 							error={city}
 							isRequired={true}
 							title="City"
-							option={['Ahmedabad', 'Delhi', 'Mumbai']}
-							isRequired={true}
+							option={['Ahmedabad', 'Delhi', 'Mumbai', 'Rajkot']}
 						/>
 					</Col>
 				</Row>
 				<Row>
-					<Col>
+					<Col md="12">
 						<Button variant="primary" onClick={this.handleClick}>Submit</Button>
 					</Col>
 				</Row>

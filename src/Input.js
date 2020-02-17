@@ -1,11 +1,10 @@
 import React from 'react';
 import './App.css'
-import { PropTypes, element } from 'prop-types';
+import { PropTypes } from 'prop-types';
 import { Form } from 'react-bootstrap';
 
 export function Input(props) {
-
-  const { title, checked, option, label, isRequired, className, name, type, value, style, placeholder,
+  const { title, isRequired, className, name, type, value, style, placeholder,
     onChange, onBlur, required, error } = props;
   return (<>
     {title}{isRequired && <span style={{ color: "red" }}>*</span>}
@@ -34,7 +33,7 @@ export class CheckBox extends React.Component {
     ]
   }
   render() {
-    let { hobbies, name, title, type, isRequired, value, onChange, error } = this.props
+    let { hobbies, title, type, isRequired, onChange, error } = this.props
     return <><div>
       {title}{isRequired && <span style={{ color: "red" }}>*</span>}
       {this.hobbies.map((x, i) => {
@@ -67,7 +66,7 @@ export class OnlyOneCheckBox extends React.Component {
     }
   }
   render() {
-    let { occupation, error, name, title, type, isRequired, value, onChange, checked } = this.props
+    let {  error, title, type, isRequired, onChange, checked } = this.props
     return <div>
       {title}{isRequired && <span style={{ color: "red" }}>*</span>}
       {this.occupation.map((x, i) => {
@@ -78,7 +77,7 @@ export class OnlyOneCheckBox extends React.Component {
               name="occupation"
               value={x.value}
               onChange={onChange}
-              checked={checked == x.value}
+              checked={checked === x.value}
               error={error}
             /> {x.label}
           </label>
@@ -99,11 +98,11 @@ export class RadioButton extends React.Component {
     ]
   }
   render() {
-    let { title, error, type, isRequired, onChange, checked } = this.props
-    return <div>
+    let { title, error, type, isRequired, onChange } = this.props
+    return <div className="mr-2">
       {title}{isRequired && <span style={{ color: "red" }}>*</span>}
       {this.gender.map((x, i) => {
-        return <label key={x.i}>
+        return <label key={i}>
           <input
             type={type}
             onChange={onChange}
