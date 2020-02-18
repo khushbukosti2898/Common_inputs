@@ -1,14 +1,14 @@
 import React from 'react';
-import './App.css'
+import './App.css';
+import './index.css';
 import { Button, Row, Col } from 'react-bootstrap';
 import { Input, CheckBox, OnlyOneCheckBox, RadioButton, DropDown } from './Input'
-import 'react-toastify/dist/ReactToastify.css';
 
 class Form extends React.Component {
 	state = {
 		fname: '',
 		lname: '',
-		mname:'',
+		mname: '',
 		email: '',
 		pwd: '',
 		gender: '',
@@ -16,6 +16,7 @@ class Form extends React.Component {
 		occupation: '',
 		hobbies: [],
 		mobile: '',
+		cpwd: '',
 		error: {
 			mobile: '',
 			fname: '',
@@ -25,9 +26,11 @@ class Form extends React.Component {
 			hobbies: '',
 			gender: '',
 			city: '',
-			occupation: ''
+			occupation: '',
+			cpwd: ''
 		}
 	}
+
 	handleChangeCheck = (e) => {
 		let { hobbies } = this.state;
 		let { value, checked } = e.target;
@@ -49,7 +52,7 @@ class Form extends React.Component {
 	}
 
 	handleSubmit = (name, value) => {
-		let { error, email, pwd, hobbies, gender, city, occupation, fname, lname, mobile,mname } = this.state;
+		let { error, email, pwd, cpwd, hobbies, gender, city, occupation, fname, lname, mobile, mname } = this.state;
 		switch (name) {
 			case 'email':
 				if (email === '')
@@ -65,6 +68,12 @@ class Form extends React.Component {
 					"Password is invalid(must contain one uppercase, lowercase, digit, special character and length>6)";
 				break;
 
+			case 'cpwd':
+				if (cpwd === '') error.cpwd = "Confirm password is required"
+				else if (cpwd !== pwd) error.cpwd = "Does not match with password"
+				else error.cpwd = ''
+				break;
+
 			case 'fname':
 				if (fname === '') error.fname = "First name is required"
 				else error.fname = fname.match(/^[a-zA-Z]{2,30}$/i) ? '' :
@@ -72,7 +81,7 @@ class Form extends React.Component {
 				break;
 
 			case 'mname':
-				 error.mname = mname.match(/^[a-zA-Z]{2,30}$/i) ? '' :
+				error.mname = mname.match(/^[a-zA-Z]{2,30}$/i) ? '' :
 					"Middle name is invalid";
 				break;
 
@@ -107,6 +116,7 @@ class Form extends React.Component {
 				else
 					error.city = '';
 				break;
+
 			default:
 				break;
 		}
@@ -130,11 +140,15 @@ class Form extends React.Component {
 	}
 
 	render() {
-		let { fname, lname, mobile, gender, hobbies, email, pwd, city, occupation,mname } = this.state.error
+		let { fname, lname, mobile, gender, cpwd, hobbies, email, pwd, city, occupation, mname } = this.state.error
 
 		return (<>
-			<div className="container card" style={{ marginTop: "50px" }}>
-				<Row className="text-center"><Col md="12"><h3>Sign up</h3></Col></Row>
+			<div className="container">
+				<Row className="text-center">
+					<Col md="12">
+						<h3><b>Sign up</b></h3>
+					</Col>
+				</Row>
 				<Row>
 					<Col md='4'>
 						<Input
@@ -199,8 +213,23 @@ class Form extends React.Component {
 							isRequired={true}
 						/>
 					</Col>
-
 					<Col md="6">
+						<Input
+							title="Confirm Password"
+							type="password"
+							name="cpwd"
+							placeholder="Confirm Password"
+							onChange={this.handleChange}
+							onBlur={this.handleChange}
+							error={cpwd}
+							isRequired={true}
+						/>
+					</Col>
+
+
+				</Row>
+				<Row>
+					<Col>
 						<Input
 							title="Mobile"
 							type="text"
@@ -213,7 +242,6 @@ class Form extends React.Component {
 						/>
 					</Col>
 				</Row>
-
 				<Row>
 					<Col md="6">
 						<CheckBox
@@ -244,7 +272,7 @@ class Form extends React.Component {
 					</Col>
 				</Row>
 				<Row>
-					<Col md="12">
+					<Col md="6">
 						<DropDown
 							name="city"
 							onChange={this.handleChange}

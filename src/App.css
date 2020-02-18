@@ -42,3 +42,17 @@
 .input{
   color:"red"
 }
+
+.text-center{
+  border: 1px solid burlywood;
+  margin-bottom: 20px;
+  background-color: blanchedalmond;
+}
+
+.container{
+  margin-top: 5px;
+  padding-bottom: 10px;
+  box-shadow: 5px 10px 5px 10px #888888;
+  border-radius: 25px;
+}
+

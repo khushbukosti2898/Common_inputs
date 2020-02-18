@@ -6,8 +6,8 @@ import { Form } from 'react-bootstrap';
 export function Input(props) {
   const { title, isRequired, className, name, type, value, style, placeholder,
     onChange, onBlur, required, error } = props;
-  return (<>
-    {title}{isRequired && <span style={{ color: "red" }}>*</span>}
+  return (<><Form.Group>
+    <b>{title}</b>{isRequired && <span style={{ color: "red" }}>*</span>}
     <Form.Control
       className={className}
       name={name}
@@ -18,7 +18,8 @@ export function Input(props) {
       onChange={onChange}
       onBlur={onBlur}
       required={required}
-    />{error && <span className="error">{`*${error} `}</span>}
+    />{error && <span className="error">{`${error} `}</span>}
+  </Form.Group>
   </>)
 }
 
@@ -26,30 +27,33 @@ export class CheckBox extends React.Component {
   constructor() {
     super()
     this.hobbies = [
-      { value: "swimming", label: "Swimming" },
-      { value: "reading", label: "Reading" },
-      { value: "dancing", label: "Dancing" },
-      { value: "cooking", label: "Cooking" },
+      { value: "swimming", label: "Swimming", id:"swimming" },
+      { value: "reading", label: "Reading", id:"reading"},
+      { value: "dancing", label: "Dancing", id:"dancing" },
+      { value: "cooking", label: "Cooking", id:"cooking" },
     ]
   }
   render() {
     let { hobbies, title, type, isRequired, onChange, error } = this.props
-    return <><div>
-      {title}{isRequired && <span style={{ color: "red" }}>*</span>}
+    return <><Form.Group>
+      <b>{title}</b>{isRequired && <span style={{ color: "red" }}>*</span>}
       {this.hobbies.map((x, i) => {
-        return (
-          <label key={i} className="mr-2">
-            <input
-              type={type}
-              name={hobbies}
-              value={x.value}
-              onChange={onChange}
-            /> {x.label}
-          </label>
+        return (<>
+          <Form.Check
+            type={type}
+            label={x.label}
+            name={hobbies}
+            value={x.value}
+            onChange={onChange}
+            id={x.id}
+          />
+        </>
         );
       })}
-    </div>
-      {error && <span className="error">{`*${error} `}</span>}
+      {error && <span className="error">{`${error} `}</span>}
+    </Form.Group>
+      
+
     </>
   }
 }
@@ -58,33 +62,33 @@ export class OnlyOneCheckBox extends React.Component {
   constructor() {
     super()
     this.occupation = [
-      { value: "employee", label: "Employee" },
-      { value: "student", label: "Student" },
+      { value: "employee", label: "Employee" ,id:"formEmployee"},
+      { value: "student", label: "Student" ,id:"formStudent" },
     ]
     this.state = {
       selected: 'student'
     }
   }
   render() {
-    let {  error, title, type, isRequired, onChange, checked } = this.props
-    return <div>
-      {title}{isRequired && <span style={{ color: "red" }}>*</span>}
+    let { error, title, type, isRequired, onChange, checked } = this.props
+    return <Form.Group>
+      <b>{title}</b>{isRequired && <span style={{ color: "red" }}>*</span>}
       {this.occupation.map((x, i) => {
         return (
-          <label key={i} className="mr-2">
-            <input
+            <Form.Check
               type={type}
               name="occupation"
               value={x.value}
+              id={x.id}
+              label={x.label}
               onChange={onChange}
               checked={checked === x.value}
               error={error}
-            /> {x.label}
-          </label>
+            /> 
         );
-      })}<br/>
-      {error && <span className="error">{`*${error} `}</span>}
-    </div>
+      })}
+      {error && <span className="error">{`${error} `}</span>}
+    </Form.Group>
 
   }
 }
@@ -93,46 +97,44 @@ export class RadioButton extends React.Component {
   constructor() {
     super()
     this.gender = [
-      { value: "female", label: "Female", name: "gender" },
-      { value: "male", label: "Male", name: "gender" },
+      { value: "female", label: "Female", name: "gender", id:"formFemale" },
+      { value: "male", label: "Male", name: "gender",id:"formMale" },
     ]
   }
   render() {
     let { title, error, type, isRequired, onChange } = this.props
-    return <div className="mr-2">
-      {title}{isRequired && <span style={{ color: "red" }}>*</span>}
+    return <Form.Group>
+      <b>{title}</b>{isRequired && <span style={{ color: "red" }}>*</span>}
       {this.gender.map((x, i) => {
-        return <label key={i}>
-          <input
+        return <>
+          <Form.Check
             type={type}
             onChange={onChange}
             value={x.value}
+            label={x.label}
+            id={x.id}
             name={x.name}
             error={error}
-          />
-          {x.label}
-        </label>
-
-      })}<br />
-      {error && <span className="error">{`*${error} `}</span>}
-    </div>
+          /></>
+      })}
+      {error && <span className="error">{`${error} `}</span>}
+    </Form.Group>
   }
 }
 
 export class DropDown extends React.Component {
   render() {
     let { title, name, error, onChange, option, isRequired } = this.props
-    return (<>
-      {title}{isRequired && <span style={{ color: "red" }}>*</span>}
-      <select name={name} onChange={onChange}>
+    return (<><Form.Group >
+      <b>{title}</b>{isRequired && <span style={{ color: "red" }}>*</span>}
+      <Form.Control as="select" name={name} onChange={onChange}>
         <option>Select</option>
         <option>{option[0]}</option>
         <option>{option[1]}</option>
         <option>{option[2]}</option>
-      </select>
-      <br />
-      {error && <span className="error">{`*${error} `}</span>}
-    </>)
+        </Form.Control>
+      {error && <span className="error">{`${error} `}</span>}
+    </Form.Group> </>)
   }
 }
 
@@ -162,4 +164,3 @@ Input.propTypes = {
   style: PropTypes.object,
   placeholder: PropTypes.string
 }
-/* export default Input; */
